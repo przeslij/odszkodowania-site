@@ -12,7 +12,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pl">
+    <html
+      lang="pl"
+      data-headlessui-focus-visible=""
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-white dark:bg-gray-900">
         {children}
       </body>

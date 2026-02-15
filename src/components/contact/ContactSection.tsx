@@ -32,6 +32,26 @@ import { FormSkeleton } from './FormSkeleton'
 import { SuccessDialog, ErrorDialog } from './ContactDialogs'
 
 // ============================================================
+// DEFAULT VALUES
+// ============================================================
+
+const defaultValues: ContactFormData = {
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  postalCode: '',
+  city: '',
+  infrastructure: [],
+  slupParams: '',
+  gazParams: '',
+  status: null,
+  hasKW: null,
+  marketingConsent: false,
+  captchaToken: '',
+}
+
+// ============================================================
 // ATOMIC COMPONENTS
 // ============================================================
 
@@ -67,39 +87,43 @@ interface InputFieldProps {
   onInput?: (e: FormEvent<HTMLInputElement>) => void
 }
 
-const InputField = memo<InputFieldProps>(({
-  id,
-  label,
-  type = 'text',
-  autoComplete,
-  placeholder,
-  error,
-  register,
-  onInput,
-}) => {
-  const inputClass = `${contactStyles.input.base} ${error ? contactStyles.input.error : contactStyles.input.normal}`
+const InputField = memo<InputFieldProps>(
+  ({
+    id,
+    label,
+    type = 'text',
+    autoComplete,
+    placeholder,
+    error,
+    register,
+    onInput,
+  }) => {
+    const inputClass = `${contactStyles.input.base} ${
+      error ? contactStyles.input.error : contactStyles.input.normal
+    }`
 
-  return (
-    <div>
-      <label htmlFor={id} className={contactStyles.label}>
-        {label} <span className="text-red-600" aria-hidden="true">*</span>
-      </label>
-      <input
-        id={id}
-        type={type}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        aria-invalid={!!error}
-        aria-describedby={error ? `error-${id}` : undefined}
-        aria-required="true"
-        className={inputClass}
-        onInput={onInput}
-        {...register}
-      />
-      <FormError id={`error-${id}`} message={error} />
-    </div>
-  )
-})
+    return (
+      <div>
+        <label htmlFor={id} className={contactStyles.label}>
+          {label} <span className="text-red-600" aria-hidden="true">*</span>
+        </label>
+        <input
+          id={id}
+          type={type}
+          autoComplete={autoComplete}
+          placeholder={placeholder}
+          aria-invalid={!!error}
+          aria-describedby={error ? `error-${id}` : undefined}
+          aria-required="true"
+          className={inputClass}
+          onInput={onInput}
+          {...register}
+        />
+        <FormError id={`error-${id}`} message={error} />
+      </div>
+    )
+  },
+)
 InputField.displayName = 'InputField'
 
 // ============================================================
@@ -126,10 +150,7 @@ export function ContactSection() {
     resolver: zodResolver(contactFormSchemaRefined),
     mode: 'onBlur',
     shouldUnregister: true,
-    defaultValues: {
-      infrastructure: [],
-      marketingConsent: false,
-    },
+    defaultValues,
   })
 
   const selectedInfra = watch('infrastructure') ?? []
@@ -193,7 +214,9 @@ export function ContactSection() {
 
         trackFormSuccess()
         setIsSuccessOpen(true)
-        reset()
+
+        // pełny reset wartości + błędów
+        reset(defaultValues)
         setCaptchaToken(null)
       } catch (err) {
         const msg =
@@ -547,27 +570,35 @@ export function ContactSection() {
             {/* Conditional Fields */}
             {showConditionalFields && (
               <>
-                {/* Status */}
-                <fieldset>
-                  <legend className="text-sm font-semibold text-gray-900 dark:text-white">
+                {/* Status as cards */}
+                <fieldset className={contactStyles.fieldset}>
+                  <legend className="text-sm font-bold text-gray-900 dark:text-white">
                     Status urządzenia{' '}
                     <span className="text-red-600" aria-hidden="true">
                       *
                     </span>
                   </legend>
-                  <div className="mt-4 space-y-3">
+                  <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
                     {STATUS_OPTIONS.map((opt) => (
                       <label
                         key={opt.id}
-                        className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
+                        className={`${contactStyles.card.base} ${contactStyles.card.normal} has-[:checked]:${contactStyles.card.checked}`}
                       >
                         <input
                           type="radio"
                           value={opt.id}
                           {...register('status')}
-                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          className="sr-only"
                         />
-                        {opt.label}
+                        <div className="flex flex-1 flex-col">
+                          <span className="block text-sm font-medium text-gray-900 dark:text-white">
+                            {opt.label}
+                          </span>
+                        </div>
+                        <CheckCircleIcon
+                          className="invisible size-5 text-indigo-600 group-has-[input:checked]:visible dark:text-indigo-500"
+                          aria-hidden="true"
+                        />
                       </label>
                     ))}
                   </div>
