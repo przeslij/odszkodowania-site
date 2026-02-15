@@ -10,7 +10,7 @@ import { WhoIsItFor } from '@/components/WhoIsItFor'
 import { TransmissionDevices } from '@/components/TransmissionDevices'
 import { HowOurProcessWorks } from '@/components/HowOurProcessWorks'
 import { Testimonials } from '@/components/Testimonials'
-import { ContactSection } from '@/components/ContactSection'
+import { ContactSection } from '@/components/contact/ContactSection'
 
 export default function Home() {
   return (

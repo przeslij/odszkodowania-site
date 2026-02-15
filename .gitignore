@@ -39,3 +39,11 @@ next-env.d.ts
 .vscode
 *.swp
 *.swo
+
+# Turbo / Vite (jeśli kiedyś użyjesz)
+.turbo
+.vite
+
+# ESLint / Prettier cache
+.eslintcache
+.prettier-cache

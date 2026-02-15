@@ -1,133 +1,151 @@
+// src/schemas/contact.ts
 import { z } from 'zod'
 
-// ============================================================
-// ENTERPRISE-GRADE CONTACT FORM SCHEMA
-// Ultra-Enterprise Polish UX with professional error messages
-// ============================================================
+export const contactFormSchemaRefined = z
+  .object({
+    firstName: z
+      .string({
+        required_error: 'Podaj imię',
+        invalid_type_error: 'Podaj imię',
+      })
+      .min(2, 'Imię musi mieć co najmniej 2 znaki'),
 
-// Phone regex - allows digits, spaces, dashes, plus, parentheses
-const phoneRegex = /^[\d\s\-\+\(\)]{9,}$/
+    lastName: z
+      .string({
+        required_error: 'Podaj nazwisko',
+        invalid_type_error: 'Podaj nazwisko',
+      })
+      .min(2, 'Nazwisko musi mieć co najmniej 2 znaki'),
 
-// Postal code regex - Polish format XX-XXX
-const postalCodeRegex = /^\d{2}-\d{3}$/
+    phone: z
+      .string({
+        required_error: 'Podaj numer telefonu',
+        invalid_type_error: 'Podaj numer telefonu',
+      })
+      .min(7, 'Podaj poprawny numer telefonu'),
 
-// Custom error map for enums to avoid "Invalid input" messages
-const enumErrorMap = (fieldName: string) => ({
-  errorMap: () => ({ message: fieldName }),
-})
+    email: z
+      .string({
+        required_error: 'Podaj adres e-mail',
+        invalid_type_error: 'Podaj adres e-mail',
+      })
+      .email('Podaj poprawny adres e-mail'),
 
-export const contactFormSchema = z.object({
-  firstName: z
-    .string({
-      required_error: 'Imię jest wymagane',
-      invalid_type_error: 'Imię musi być tekstem',
-    })
-    .min(2, 'Imię musi mieć co najmniej 2 znaki')
-    .max(50, 'Imię nie może przekraczać 50 znaków')
-    .regex(/^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/, 'Imię może zawierać tylko litery'),
+    postalCode: z
+      .string({
+        required_error: 'Podaj kod pocztowy',
+        invalid_type_error: 'Podaj kod pocztowy',
+      })
+      .regex(/^\d{2}-\d{3}$/, 'Wprowadź kod pocztowy w formacie 00-000'),
 
-  lastName: z
-    .string({
-      required_error: 'Nazwisko jest wymagane',
-      invalid_type_error: 'Nazwisko musi być tekstem',
-    })
-    .min(2, 'Nazwisko musi mieć co najmniej 2 znaki')
-    .max(50, 'Nazwisko nie może przekraczać 50 znaków')
-    .regex(/^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]+$/, 'Nazwisko może zawierać tylko litery'),
+    city: z
+      .string({
+        required_error: 'Podaj miejscowość',
+        invalid_type_error: 'Podaj miejscowość',
+      })
+      .min(2, 'Podaj miejscowość'),
 
-  phone: z
-    .string({
-      required_error: 'Numer telefonu jest wymagany',
-      invalid_type_error: 'Numer telefonu musi być tekstem',
-    })
-    .min(9, 'Numer telefonu musi mieć co najmniej 9 cyfr')
-    .max(20, 'Numer telefonu jest za długi')
-    .regex(phoneRegex, 'Wprowadź prawidłowy numer telefonu'),
+    infrastructure: z
+      .array(
+        z.enum(['slup', 'gaz', 'ropa', 'inne'], {
+          invalid_type_error: 'Wybierz rodzaj infrastruktury',
+        }),
+        {
+          required_error: 'Wybierz rodzaj infrastruktury',
+          invalid_type_error: 'Wybierz rodzaj infrastruktury',
+        },
+      )
+      .min(1, 'Wybierz co najmniej jeden rodzaj infrastruktury'),
 
-  email: z
-    .string({
-      required_error: 'Adres e-mail jest wymagany',
-      invalid_type_error: 'Adres e-mail musi być tekstem',
-    })
-    .min(1, 'Adres e-mail jest wymagany')
-    .email('Wprowadź prawidłowy adres e-mail'),
+    // Te pola są wymagane warunkowo (w superRefine),
+    // dlatego dopuszczamy undefined/null, żeby nie było
+    // domyślnego "Expected string, received null".
+    slupParams: z
+      .string({
+        invalid_type_error: 'Wybierz parametry techniczne słupa',
+      })
+      .optional()
+      .nullable(),
 
-  postalCode: z
-    .string({
-      required_error: 'Kod pocztowy jest wymagany',
-      invalid_type_error: 'Kod pocztowy musi być tekstem',
-    })
-    .regex(postalCodeRegex, 'Wprowadź kod pocztowy w formacie 00-000'),
+    gazParams: z
+      .string({
+        invalid_type_error: 'Wybierz parametry techniczne gazociągu',
+      })
+      .optional()
+      .nullable(),
 
-  city: z
-    .string({
-      required_error: 'Miejscowość jest wymagana',
-      invalid_type_error: 'Miejscowość musi być tekstem',
-    })
-    .min(2, 'Nazwa miejscowości musi mieć co najmniej 2 znaki')
-    .max(100, 'Nazwa miejscowości jest za długa'),
+    status: z
+      .enum(['existing', 'planned', 'modernization'], {
+        invalid_type_error: 'Wybierz status urządzenia',
+      })
+      .optional()
+      .nullable(),
 
-  infrastructure: z
-    .array(z.string(), {
-      required_error: 'Wybierz co najmniej jeden rodzaj infrastruktury',
-      invalid_type_error: 'Nieprawidłowy format danych infrastruktury',
-    })
-    .min(1, 'Wybierz co najmniej jeden rodzaj infrastruktury'),
+    hasKW: z
+      .enum(['yes', 'no'], {
+        invalid_type_error: 'Wybierz odpowiedź dotyczącą księgi wieczystej',
+      })
+      .optional()
+      .nullable(),
 
-  slupParams: z.string().optional(),
-  gazParams: z.string().optional(),
+    marketingConsent: z.boolean({
+      required_error: 'Zaznacz zgodę na telefoniczny kontakt marketingowy',
+      invalid_type_error: 'Zaznacz zgodę na telefoniczny kontakt marketingowy',
+    }),
 
-  status: z.enum(
-    ['existing', 'planned', 'modernization'],
-    enumErrorMap('Wybierz aktualny stan infrastruktury na działce.')
-  ),
+    captchaToken: z
+      .string({
+        required_error: 'Potwierdź, że nie jesteś robotem',
+        invalid_type_error: 'Potwierdź, że nie jesteś robotem',
+      })
+      .min(1, 'Potwierdź, że nie jesteś robotem'),
+  })
+  .superRefine((data, ctx) => {
+    const infra = data.infrastructure ?? []
 
-  hasKW: z.enum(
-    ['yes', 'no'],
-    enumErrorMap('Informacja o Księdze Wieczystej jest niezbędna do analizy.')
-  ),
-
-  marketingConsent: z.boolean({
-    required_error: 'Wymagana jest zgoda na kontakt w celu przedstawienia analizy.',
-    invalid_type_error: 'Nieprawidłowy format zgody',
-  }).refine(
-    (val) => val === true,
-    { message: 'Wymagana jest zgoda na kontakt w celu przedstawienia analizy.' }
-  ),
-
-  captchaToken: z.string({
-    required_error: 'Weryfikacja CAPTCHA jest wymagana',
-    invalid_type_error: 'Nieprawidłowy token CAPTCHA',
-  }).min(1, 'Weryfikacja CAPTCHA jest wymagana'),
-})
-
-// ============================================================
-// CONDITIONAL VALIDATION with superRefine
-// Ensures slupParams and gazParams are only validated when relevant
-// ============================================================
-
-export const contactFormSchemaRefined = contactFormSchema.superRefine((data, ctx) => {
-  // Validate slupParams only when 'slup' is selected
-  if (data.infrastructure.includes('slup')) {
-    if (!data.slupParams || data.slupParams.trim() === '') {
+    // Parametry słupa wymagane tylko, jeśli wybrano słup
+    if (infra.includes('slup') && !data.slupParams) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Prosimy o wybranie parametrów technicznych urządzenia.',
         path: ['slupParams'],
-      })
-    }
-  }
-
-  // Validate gazParams only when 'gaz' is selected
-  if (data.infrastructure.includes('gaz')) {
-    if (!data.gazParams || data.gazParams.trim() === '') {
-      ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Prosimy o wybranie parametrów technicznych urządzenia.',
-        path: ['gazParams'],
+        message: 'Wybierz parametry techniczne słupa',
       })
     }
-  }
-})
+
+    // Parametry gazociągu wymagane tylko, jeśli wybrano gaz
+    if (infra.includes('gaz') && !data.gazParams) {
+      ctx.addIssue({
+        path: ['gazParams'],
+        code: z.ZodIssueCode.custom,
+        message: 'Wybierz parametry techniczne gazociągu',
+      })
+    }
+
+    // Status i KW wymagane, gdy wybrano jakąkolwiek infrastrukturę
+    if (infra.length > 0 && !data.status) {
+      ctx.addIssue({
+        path: ['status'],
+        code: z.ZodIssueCode.custom,
+        message: 'Wybierz status urządzenia',
+      })
+    }
+
+    if (infra.length > 0 && !data.hasKW) {
+      ctx.addIssue({
+        path: ['hasKW'],
+        code: z.ZodIssueCode.custom,
+        message: 'Wybierz odpowiedź dotyczącą księgi wieczystej',
+      })
+    }
+
+    // Wymuszamy zaznaczenie zgody marketingowej
+    if (data.marketingConsent !== true) {
+      ctx.addIssue({
+        path: ['marketingConsent'],
+        code: z.ZodIssueCode.custom,
+        message: 'Zaznacz zgodę na telefoniczny kontakt marketingowy',
+      })
+    }
+  })
 
 export type ContactFormData = z.infer<typeof contactFormSchemaRefined>
