@@ -5,6 +5,7 @@ import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { Pricing } from '@/components/Pricing'
 import { ProblemContext } from '@/components/ProblemContext'
+import { LegalAuthority } from '@/components/LegalAuthority'
 import { AudienceCTA} from '@/components/AudienceCTA'
 import { WhoIsItFor } from '@/components/WhoIsItFor'
 import { TransmissionDevices } from '@/components/TransmissionDevices'
@@ -18,6 +19,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <LegalAuthority />
         <ProblemContext />
         <AudienceCTA />
         <WhoIsItFor />

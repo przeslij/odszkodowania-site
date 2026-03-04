@@ -941,30 +941,44 @@ export function ContactSection() {
               </>
             )}
 
-            {/* Marketing Consent */}
-            <div className="flex gap-3">
-              <div className="flex h-6 shrink-0 items-center">
-                <input
-                  id="marketingConsent"
-                  type="checkbox"
-                  {...register('marketingConsent')}
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                />
-              </div>
-              <div className="text-sm leading-6">
-                <label
-                  htmlFor="marketingConsent"
-                  className="text-gray-600 dark:text-gray-400 cursor-pointer"
-                >
-                  Zgadzam się na telefoniczny kontakt marketingowy.{' '}
-                  <span className="text-red-600" aria-hidden="true">
-                    *
-                  </span>
-                </label>
-                <FormError
-                  id="error-marketingConsent"
-                  message={errors.marketingConsent?.message}
-                />
+            {/* Marketing Consent z informacją RODO */}
+            <div className="rounded-xl border border-gray-200 bg-gray-50/50 p-5 dark:border-white/10 dark:bg-gray-800/30">
+              <div className="flex gap-3">
+                <div className="flex h-6 shrink-0 items-center mt-0.5">
+                  <input
+                    id="marketingConsent"
+                    type="checkbox"
+                    {...register('marketingConsent')}
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-600"
+                  />
+                </div>
+                <div className="text-sm leading-6">
+                  <label
+                    htmlFor="marketingConsent"
+                    className="font-medium text-gray-900 dark:text-white cursor-pointer"
+                  >
+                    Wyrażam zgodę na telefoniczny kontakt marketingowy{' '}
+                    <span className="text-red-600" aria-hidden="true">
+                      *
+                    </span>
+                  </label>
+                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                    Aston Legal sp. z o.o. przetwarza Twoje dane w celu kontaktu w sprawie oferty. 
+                    Możesz złożyć sprzeciw lub odwołać zgodę w dowolnym momencie.{' '}
+                    <a 
+                      href="/polityka-prywatnosci" 
+                      className="text-indigo-600 hover:text-indigo-500 underline underline-offset-2 dark:text-indigo-400"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Polityka prywatności
+                    </a>
+                  </p>
+                  <FormError
+                    id="error-marketingConsent"
+                    message={errors.marketingConsent?.message}
+                  />
+                </div>
               </div>
             </div>
 

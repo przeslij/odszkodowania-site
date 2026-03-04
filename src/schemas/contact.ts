@@ -108,11 +108,16 @@ export const contactFormSchemaRefined = z
       .optional()
       .nullable(),
 
-    marketingConsent: z.literal(true, {
-      errorMap: () => ({
-        message: 'Zaznacz zgodę na telefoniczny kontakt marketingowy',
+    // POPRAWIONE: Używamy boolean() z refine zamiast literal(true)
+    // Pozwala to na false w defaultValues, ale wymaga true przy walidacji
+    marketingConsent: z
+      .boolean({
+        required_error: 'Zaznacz zgodę na kontakt marketingowy',
+        invalid_type_error: 'Zaznacz zgodę na kontakt marketingowy',
+      })
+      .refine((val) => val === true, {
+        message: 'Zaznacz zgodę na kontakt marketingowy',
       }),
-    }),
 
     captchaToken: z
       .string({
