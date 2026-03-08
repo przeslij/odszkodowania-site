@@ -7,15 +7,13 @@ export function AudienceCTA() {
           <br />
           warto sprawdzić swoje możliwości.
         </h2>
-
         <div className="mt-10 flex items-center gap-x-6 lg:mt-0 lg:shrink-0">
           <a
             href="#kontakt"
-            className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+            className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500"
           >
-            Sprawdź swoją sprawę
+            Sprawdź swoją sprawę →
           </a>
-
           <a
             href="#jak-dzialamy"
             className="text-sm/6 font-semibold text-gray-900 hover:opacity-80 dark:text-gray-100"

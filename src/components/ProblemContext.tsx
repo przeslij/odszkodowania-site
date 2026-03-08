@@ -23,7 +23,7 @@ export function ProblemContext() {
 
           {/* Narrative – 2 columns */}
           <div className="mt-10 grid max-w-xl grid-cols-1 gap-8 text-base/7 text-gray-700 lg:max-w-none lg:grid-cols-2 dark:text-gray-300">
-            {/* Column 1 */}
+            {/* Column 1 — definicja (AEO) */}
             <div>
               <p>
                 <strong>Służebność przesyłu</strong> to prawo przysługujące
@@ -42,8 +42,8 @@ export function ProblemContext() {
               </p>
             </div>
 
-            {/* Column 2 */}
-            <div>
+            {/* Column 2 — wyróżniony cytat/kontekst */}
+            <div className="border-l-4 border-indigo-500 pl-8 dark:border-indigo-400">
               <p>
                 Dla właściciela nieruchomości oznacza to realne ograniczenia:
                 brak możliwości zabudowy części działki, spadek jej wartości,
@@ -73,6 +73,35 @@ export function ProblemContext() {
           </div>
         </div>
       </div>
+
+      {/* Schema.org — FAQPage dla AEO / Featured Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'Czym jest służebność przesyłu?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Służebność przesyłu to prawo przysługujące przedsiębiorstwom energetycznym, gazowym lub telekomunikacyjnym do korzystania z cudzej nieruchomości w celu posadowienia oraz eksploatacji infrastruktury przesyłowej — takiej jak słupy, linie energetyczne, rurociągi czy kable.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Czy właściciel nieruchomości może żądać odszkodowania za słupy energetyczne?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Tak. Właścicielowi nieruchomości, przez którą przebiega infrastruktura przesyłowa posadowiona bez umowy i bez wynagrodzenia, przysługuje roszczenie o wynagrodzenie za bezumowne korzystanie, odszkodowanie lub uregulowanie stanu prawnego poprzez ustanowienie służebności przesyłu.',
+                },
+              },
+            ],
+          }),
+        }}
+      />
     </section>
   )
 }

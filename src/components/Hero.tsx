@@ -28,8 +28,8 @@ export function Hero() {
         {/* LEWA KOLUMNA */}
         <div className="mx-auto max-w-2xl lg:mx-0 lg:pt-8">
           <div className="mt-16">
-            <span className="inline-flex items-center rounded-full bg-indigo-50 px-4 py-1 text-sm font-semibold text-indigo-700 ring-1 ring-indigo-700/20">
-              Bezpłatna analiza sprawy
+            <span className="inline-flex items-center rounded-full bg-indigo-50 px-4 py-1.5 text-sm font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-700/20 dark:bg-indigo-950/50 dark:text-indigo-300 dark:ring-indigo-400/30">
+              Bezpłatna analiza prawna
             </span>
           </div>
 
@@ -41,9 +41,9 @@ export function Hero() {
           </h1>
 
           <p className="mt-8 text-lg text-gray-600 sm:text-xl">
-            Pomagamy właścicielom nieruchomości skutecznie uzyskać
-            wynagrodzenie za bezumowne korzystanie z gruntu oraz ustanowienie
-            służebności przesyłu.
+            Pomagamy właścicielom nieruchomości uzyskać wynagrodzenie za
+            bezumowne korzystanie z gruntu oraz ustanowienie służebności
+            przesyłu. Analizujemy Twoją sprawę bezpłatnie — bez zobowiązań.
           </p>
 
           <div className="mt-10 flex items-center gap-x-6">
@@ -51,13 +51,13 @@ export function Hero() {
               href="#kontakt"
               className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500"
             >
-              Sprawdź swoją sprawę
+              Sprawdź swoją sprawę →
             </a>
             <a
               href="#jak-dzialamy"
               className="text-sm font-semibold text-gray-900"
             >
-              Jak to działa <span aria-hidden="true">→</span>
+              Jak to działa <span aria-hidden="true">↓</span>
             </a>
           </div>
         </div>

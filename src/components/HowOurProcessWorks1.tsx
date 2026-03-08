@@ -1,5 +1,5 @@
+---
 import { InboxIcon, ClipboardDocumentCheckIcon, HandRaisedIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
-
 const processSteps = [
   {
     name: 'Zgłoszenie sprawy',
@@ -7,6 +7,7 @@ const processSteps = [
       'Klient zgłasza potencjalne roszczenie związane z urządzeniami przesyłowymi lub infrastrukturą.',
     icon: InboxIcon,
     color: 'bg-indigo-600 dark:bg-indigo-500',
+    tags: ['Formularz online', 'Telefon', 'Email'],
   },
   {
     name: 'Analiza i wycena',
@@ -14,6 +15,7 @@ const processSteps = [
       'Nasz zespół dokonuje szczegółowej analizy sytuacji i wyceny możliwego odszkodowania.',
     icon: ClipboardDocumentCheckIcon,
     color: 'bg-green-600 dark:bg-green-500',
+    tags: ['Analiza KW', 'Mapy geodezyjne', 'Wycena'],
   },
   {
     name: 'Negocjacje z podmiotami',
@@ -21,6 +23,7 @@ const processSteps = [
       'Prowadzimy negocjacje z właścicielami infrastruktury w celu uzyskania możliwie najlepszego odszkodowania.',
     icon: HandRaisedIcon,
     color: 'bg-yellow-600 dark:bg-yellow-500',
+    tags: ['Negocjacje', 'Mediacje', 'Postępowanie sądowe'],
   },
   {
     name: 'Wypłata odszkodowania',
@@ -28,14 +31,15 @@ const processSteps = [
       'Po zakończonym procesie klient otrzymuje należne odszkodowanie finansowe.',
     icon: CurrencyDollarIcon,
     color: 'bg-red-600 dark:bg-red-500',
+    tags: ['Umowa', 'Wypłata', 'Zamknięcie sprawy'],
   },
 ]
+---
 
 export function HowOurProcessWorks1() {
   return (
     <div className="bg-gray-50 py-24 sm:py-32 dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Nagłówek */}
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">
             Jak działa nasz proces
@@ -44,8 +48,6 @@ export function HowOurProcessWorks1() {
             Przejrzyste 4 kroki do uzyskania odszkodowania
           </p>
         </div>
-
-        {/* Grid kroków */}
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-4">
           {processSteps.map((step) => (
             <div key={step.name} className="flex flex-col items-center text-center">
@@ -56,6 +58,16 @@ export function HowOurProcessWorks1() {
                 {step.name}
               </p>
               <p className="mt-2 text-base/7 text-gray-600 dark:text-gray-400">{step.description}</p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                {step.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           ))}
         </div>

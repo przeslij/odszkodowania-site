@@ -1,5 +1,5 @@
 import { CallToAction } from '@/components/CallToAction'
-import { Faqs } from '@/components/Faqs'
+import { Faq } from '@/components/Faq'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
@@ -12,6 +12,8 @@ import { TransmissionDevices } from '@/components/TransmissionDevices'
 import { HowOurProcessWorks } from '@/components/HowOurProcessWorks'
 import { Testimonials } from '@/components/Testimonials'
 import { ContactSection } from '@/components/contact/ContactSection'
+import { ClaimsCatalog } from '@/components/Claimscatalog'
+import { WhyUs } from '@/components/WhyUs'
 
 export default function Home() {
   return (
@@ -20,15 +22,17 @@ export default function Home() {
       <main>
         <Hero />
         <LegalAuthority />
+        <TransmissionDevices />
         <ProblemContext />
+        <ClaimsCatalog />
+        <HowOurProcessWorks />
         <AudienceCTA />
         <WhoIsItFor />
-        <TransmissionDevices />
-        <HowOurProcessWorks /> 
+        <WhyUs />
         <CallToAction />
         <Testimonials />
         <Pricing />
-        <Faqs />
+        <Faq />
         <ContactSection />
       </main>
       <Footer />

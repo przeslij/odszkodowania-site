@@ -3,22 +3,13 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { 
-  BoltIcon, 
-  FireIcon, 
+import {
+  BoltIcon,
+  FireIcon,
   SignalIcon,
   ArrowRightIcon,
-  WrenchScrewdriverIcon
+  BeakerIcon
 } from '@heroicons/react/24/outline'
-
-/**
- * TransmissionDevices - Enterprise Bento Grid z urządzeniami przesyłowymi
- * * Optymalizacje SEO & CRO:
- * - Układ 2+3 budujący hierarchię wizualną (Najczęstsze problemy na górze).
- * - Semantyczne H3 i precyzyjne atrybuty ALT.
- * - Słownictwo LSI: "infrastruktura elektroenergetyczna", "pasy technologiczne".
- * - Schema.org FAQ pod Featured Snippets.
- */
 
 interface DeviceCard {
   id: string
@@ -29,15 +20,14 @@ interface DeviceCard {
   imageSrc: string
   imageAlt: string
   icon: React.ElementType
-  gridClass: string // Klasa sterująca rozmiarem w siatce Bento
+  gridClass: string
   href: string
 }
 
 const devices: DeviceCard[] = [
-  // --- GÓRNY RZĄD (Szerokie karty: lg:col-span-3) ---
   {
     id: 'slupy-niskiego-i-sredniego-napiecia',
-    title: 'Słupy niskiego i średniego napięcia',
+    title: 'Słupy nN i SN',
     heading: 'Infrastruktura Elektroenergetyczna nN i SN',
     description: `Najczęstsza przyczyna spadku wartości działek budowlanych. Słupy i napowietrzne linie energetyczne stanowią trwałe ograniczenie możliwości zabudowy oraz aranżacji Twojego gruntu.`,
     details: [
@@ -53,21 +43,20 @@ const devices: DeviceCard[] = [
   },
   {
     id: 'linie-wysokiego-napiecia',
-    title: 'Linie i wieże wysokiego napięcia',
-    heading: 'Magistrale Przesyłowe 110kV - 750kV',
+    title: 'Linie i wieże WN',
+    heading: 'Magistrale Przesyłowe 110kV–750kV',
     description: `Infrastruktura o największym stopniu uciążliwości. Szerokie strefy ochronne i promieniowanie elektromagnetyczne wyłączają ogromne połacie gruntu inwestycyjnego z bezpiecznego użytkowania.`,
     details: [
       'Najwyższe stawki odszkodowawcze',
       'Rekompensata za drastyczny spadek wartości',
       'Reprezentacja przed operatorami (np. PGE, PSE)'
-    ], 
+    ],
     imageSrc: '/assets/odszkodowania/urzadzenia/slupy/wysokie-napiecie/slup-wysokie-napiecie-110kv-odszkodowanie.webp',
     imageAlt: 'Wieża wysokiego napięcia 110kV-750kV ograniczająca prawo własności nieruchomości',
     icon: BoltIcon,
     gridClass: 'lg:col-span-3',
     href: '#linie-wysokiego-napiecia'
   },
-  // --- DOLNY RZĄD (Węższe karty: lg:col-span-2) ---
   {
     id: 'gazociagi-i-ropociagi',
     title: 'Gazociągi i ropociągi',
@@ -110,9 +99,9 @@ const devices: DeviceCard[] = [
       'Roszczenia za studnie i rury',
       'Ustanowienie służebności'
     ],
-    imageSrc: '/assets/odszkodowania/urzadzenia/wodociagi/infrastruktura-wod-kan-odszkodowanie.webp', // Wymaga dodania tego pliku w folderze!
+    imageSrc: '/assets/odszkodowania/urzadzenia/wodociagi/infrastruktura-wod-kan-odszkodowanie.webp',
     imageAlt: 'Infrastruktura wodociągowa i kanalizacyjna na prywatnej działce budowlanej',
-    icon: WrenchScrewdriverIcon,
+    icon: BeakerIcon,
     gridClass: 'lg:col-span-2',
     href: '#sieci-wodociagowe'
   }
@@ -120,19 +109,18 @@ const devices: DeviceCard[] = [
 
 function DeviceCardComponent({ device }: { device: DeviceCard }) {
   const Icon = device.icon
-  
+
   return (
-    <article 
+    <article
       id={device.id}
       className={`
         ${device.gridClass}
-        group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm 
+        group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm
         border border-gray-200 transition-all duration-300
         hover:shadow-xl hover:border-indigo-300
         dark:bg-gray-800/80 dark:border-gray-700 dark:hover:border-indigo-500/50
       `}
     >
-      {/* Obrazek - dopasowujący się do wysokości w zależności od urządzenia */}
       <div className="relative h-48 sm:h-56 overflow-hidden bg-gray-100 dark:bg-gray-900 shrink-0">
         <Image
           src={device.imageSrc}
@@ -144,8 +132,6 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
           sizes="(max-width: 1024px) 100vw, 50vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
-        
-        {/* Badge z Ikoną i Tytułem na obrazku */}
         <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white shadow-md">
             <Icon className="h-4 w-4" />
@@ -156,20 +142,16 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
         </div>
       </div>
 
-      {/* Kontent tekstowy */}
       <div className="flex flex-col flex-grow p-6 sm:p-8">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
           {device.heading}
         </h3>
-        
         <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-6 flex-grow">
           {device.description}
         </p>
-
-        {/* Lista korzyści */}
         <ul className="space-y-2 mb-6 border-t border-gray-100 dark:border-gray-700/50 pt-4">
           {device.details.map((detail, index) => (
-            <li 
+            <li
               key={index}
               className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium"
             >
@@ -180,8 +162,6 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
             </li>
           ))}
         </ul>
-
-        {/* CTA */}
         <Link
           href="#darmowa-analiza"
           className="mt-auto inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
@@ -196,27 +176,31 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
 
 export function TransmissionDevices() {
   return (
-    <section 
+    <section
       id="urzadzenia-przesylowe"
       aria-labelledby="devices-heading"
       className="py-24 sm:py-32 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header Enterprise */}
-        <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
-          <h2 className="text-base font-semibold leading-7 text-indigo-600 dark:text-indigo-400 tracking-wide uppercase">
-            Audyt Infrastruktury
-          </h2>
-          <p 
-            id="devices-heading"
-            className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl"
-          >
-            Urządzenia przesyłowe na Twojej działce
-          </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-            Każde urządzenie stanowiące <strong>trwałe ograniczenie korzystania z nieruchomości</strong> uprawnia Cię do wynagrodzenia. Wybierz rodzaj infrastruktury, z którym się mierzysz, aby sprawdzić swoje prawa.
-          </p>
+
+        {/* Section Header — 2-column */}
+        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none lg:grid lg:grid-cols-2 lg:gap-x-16 mb-16 sm:mb-20">
+          <div>
+            <p className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">
+              Audyt infrastruktury
+            </p>
+            <h2
+              id="devices-heading"
+              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
+            >
+              Urządzenia przesyłowe na Twojej działce
+            </h2>
+          </div>
+          <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
+            <p className="text-lg leading-8 text-gray-600 dark:text-gray-300">
+              Każde urządzenie stanowiące <strong>trwałe ograniczenie korzystania z nieruchomości</strong> uprawnia Cię do wynagrodzenia. Wybierz rodzaj infrastruktury, z którym się mierzysz, aby sprawdzić swoje prawa.
+            </p>
+          </div>
         </div>
 
         {/* Bento Grid Layout */}
@@ -226,21 +210,21 @@ export function TransmissionDevices() {
           ))}
         </div>
 
-        {/* Bottom CTA Element */}
+        {/* Bottom CTA */}
         <div className="mt-20 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
           <Link
             href="#darmowa-analiza"
-            className="rounded-lg bg-indigo-600 px-8 py-4 text-sm font-semibold text-white shadow-md hover:bg-indigo-500 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all duration-200"
+            className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500 transition-colors duration-200"
           >
-            Zamów bezpłatną analizę map
+            Zamów bezpłatną analizę map →
           </Link>
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            Brak opłat wstępnych • Weryfikacja w 24h
+            Brak opłat wstępnych · Weryfikacja w 24h
           </p>
         </div>
       </div>
 
-      {/* Schema.org JSON-LD pod Google Featured Snippets */}
+      {/* Schema.org JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
