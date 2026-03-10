@@ -36,7 +36,7 @@ export function ProblemContext() {
                 W bardzo wielu przypadkach infrastruktura ta została wybudowana
                 kilkanaście lub kilkadziesiąt lat temu{' '}
                 <strong>
-                  bez zawarcia umowy z właścicielem gruntu
+                  bez zawarcia umowy z właścicielem gruntu i bez wypłaty wynagrodzenia za korzystanie z nieruchomości
                 </strong>{' '}
                 i bez wypłaty jakiegokolwiek wynagrodzenia.
               </p>

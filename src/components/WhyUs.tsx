@@ -127,7 +127,7 @@ export function WhyUs() {
             </h2>
           </div>
           <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
-            <p className="text-lg/8 text-slate-600 dark:text-slate-400">
+            <p className="max-w-xl text-lg/8 text-slate-600 dark:text-slate-400">
               Mniej spraw, więcej uwagi. Stawiamy na bezpośredni kontakt, rzetelną analizę
               i pełną przejrzystość — zanim cokolwiek podpiszesz, będziesz wiedzieć, na czym stoisz.
             </p>

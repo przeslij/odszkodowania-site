@@ -363,7 +363,7 @@ export function HowOurProcessWorks() {
             </h2>
           </div>
           <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
-            <p className="text-lg/8 text-slate-600 dark:text-slate-300">
+            <p className="max-w-xl text-lg/8 text-slate-600 dark:text-slate-300">
               Od zgłoszenia do wypłaty - każdy etap jest transparentny. Nie musisz znać przepisów,
               wystarczy że znasz swoją działkę.
             </p>
@@ -436,7 +436,7 @@ export function HowOurProcessWorks() {
             data-analytics="cta-primary"
             data-analytics-location="process-section"
           >
-            Odbierz bezpłatną analizę swojej działki →
+            Sprawdź swoją sprawę →
           </a>
         </div>
       </div>

@@ -11,7 +11,7 @@ import { ScaleIcon, ShieldCheckIcon, AcademicCapIcon } from '@heroicons/react/24
 
 export function LegalAuthority() {
   return (
-    <section className="relative overflow-hidden bg-slate-50 py-16 sm:py-24 dark:bg-gray-900">
+    <section id="wyrok-tk" className="relative overflow-hidden bg-slate-50 py-16 sm:py-24 dark:bg-gray-900">
       {/* Subtelne tło z paragrafem konstytucji dla efektu "Enterprise" */}
       <div className="absolute top-0 left-0 hidden h-full w-1/3 opacity-5 lg:block">
         <span className="text-[10rem] font-bold leading-none select-none">Art. 21</span>
@@ -34,7 +34,7 @@ export function LegalAuthority() {
             </p>
             <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
               To oznacza, że właściciele nieruchomości, którzy dotychczas byli pozbawieni szans na dochodzenie swoich
-              praw, mogą teraz ponownie rozważyć swoje roszczenia — nawet jeśli urządzenia stoją na działce od
+              praw, mogą teraz ponownie rozważyć swoje roszczenia - nawet jeśli urządzenia stoją na działce od
               kilkudziesięciu lat.
             </p>
           </div>
@@ -53,7 +53,9 @@ export function LegalAuthority() {
                 <AcademicCapIcon className="h-6 w-6 text-white" />
               </div>
               <h4 className="font-bold text-slate-900 text-base mb-2 dark:text-white">Rewizja starych spraw</h4>
-              <p className="text-sm text-slate-600 dark:text-gray-300">Nawet jeśli słupy stoją od lat 80., wyrok otwiera drogę do roszczeń, które wcześniej uznawano za przedawnione.</p>
+              <p className="text-sm text-slate-600 dark:text-gray-300">Wyrok zakwestionował dotychczasową praktykę zasiedzenia służebności przesyłu
+w złej wierze bez odszkodowania. Otwiera to drogę do ponownej analizy spraw
+wcześniej uznanych za zamknięte - nawet jeśli słupy stoją od lat 80.</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-600 mb-4">

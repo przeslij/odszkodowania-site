@@ -163,7 +163,7 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
           ))}
         </ul>
         <Link
-          href="#darmowa-analiza"
+          href="#kontakt"
           className="mt-auto inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
         >
           Sprawdź potencjał roszczeń
@@ -177,7 +177,7 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
 export function TransmissionDevices() {
   return (
     <section
-      id="urzadzenia-przesylowe"
+      id="urzadzenia"
       aria-labelledby="devices-heading"
       className="py-24 sm:py-32 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
     >
@@ -197,7 +197,7 @@ export function TransmissionDevices() {
             </h2>
           </div>
           <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
-            <p className="text-lg leading-8 text-gray-600 dark:text-gray-300">
+            <p className="max-w-xl text-lg leading-8 text-gray-600 dark:text-gray-300">
               Każde urządzenie stanowiące <strong>trwałe ograniczenie korzystania z nieruchomości</strong> uprawnia Cię do wynagrodzenia. Wybierz rodzaj infrastruktury, z którym się mierzysz, aby sprawdzić swoje prawa.
             </p>
           </div>
@@ -213,10 +213,10 @@ export function TransmissionDevices() {
         {/* Bottom CTA */}
         <div className="mt-20 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
           <Link
-            href="#darmowa-analiza"
+            href="#kontakt"
             className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500 transition-colors duration-200"
           >
-            Zamów bezpłatną analizę map →
+            Zamów bezpłatną analizę →
           </Link>
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
             Brak opłat wstępnych · Weryfikacja w 24h

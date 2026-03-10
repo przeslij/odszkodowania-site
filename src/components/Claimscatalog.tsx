@@ -46,10 +46,10 @@ export function ClaimsCatalog() {
             </h2>
           </div>
           <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
-            <p className="text-lg/8 text-gray-600 dark:text-gray-300">
+            <p className="max-w-xl text-lg/8 text-gray-600 dark:text-gray-300">
               <span className="block">Infrastruktura przesyłowa na&nbsp;Twojej działce to&nbsp;nie tylko ograniczenie.</span>
               <span className="block">To&nbsp;konkretna podstawa prawna do&nbsp;uzyskania wynagrodzenia.</span>
-              <span className="block">Oto&nbsp;roszczenia, które analizujemy w&nbsp;każdej sprawie.</span>
+              <span className="block">Oto&nbsp;roszczenia z tytułu służebności przesyłu, które analizujemy&nbsp;w każdej sprawie.</span>
             </p>
           </div>
         </div>

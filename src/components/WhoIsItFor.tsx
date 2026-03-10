@@ -62,7 +62,7 @@ const segments = [
   {
     name: 'Właściciele gruntów rolnych',
     description:
-      'Infrastruktura przesyłowa ogranicza uprawę i dojazd maszynami. Prawo przewiduje wynagrodzenie za bezumowne korzystanie z gruntu oraz za obniżenie jego użyteczności.',
+      'Infrastruktura przesyłowa ogranicza uprawę i dojazd maszynami na gruntach rolnych. Prawo przewiduje wynagrodzenie za bezumowne korzystanie z gruntu oraz za obniżenie jego użyteczności.',
     icon: TractorIcon,
   },
   {
@@ -105,7 +105,7 @@ export function WhoIsItFor() {
             </h2>
           </div>
           <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
-            <p className="text-lg/8 text-slate-600 dark:text-slate-400">
+            <p className="max-w-xl text-lg/8 text-slate-600 dark:text-slate-400">
               Sprawdź, czy Twoja nieruchomość kwalifikuje się do uzyskania wynagrodzenia lub
               odszkodowania.
             </p>

@@ -641,6 +641,7 @@ export function ContactSection() {
 
   return (
     <section
+      id="kontakt"
       className="bg-white px-6 py-24 dark:bg-gray-900 sm:py-32"
       aria-labelledby="form-title"
     >
@@ -937,6 +938,9 @@ export function ContactSection() {
                     id="error-hasKW"
                     message={errors.hasKW?.message}
                   />
+                  <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                    Nie masz numeru pod ręką? Wystarczy adres - resztę zweryfikujemy sami.
+                  </p>
                 </fieldset>
               </>
             )}
@@ -1069,7 +1073,7 @@ export function ContactSection() {
                     className="h-5 w-5 shrink-0 text-green-500"
                     aria-hidden="true"
                   />
-                  <span>95% wygranych spraw</span>
+                  <span>Indywidualna strategia</span>
                 </li>
               </ul>
             </div>
