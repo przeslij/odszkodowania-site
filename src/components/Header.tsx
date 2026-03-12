@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Bars3Icon, XMarkIcon, PhoneIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -20,7 +21,7 @@ export function Header() {
 
   return (
     <>
-      {/* Top trust bar - Skoncentrowany na autorytecie */}
+      {/* Top trust bar */}
       <div className="bg-slate-900 py-2">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 flex items-center justify-between">
           <p className="flex items-center gap-x-2 text-[11px] sm:text-xs text-slate-300 font-medium tracking-wide">
@@ -40,7 +41,7 @@ export function Header() {
           
           {/* Logo */}
           <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Służebność Przesyłu - Kancelaria Odszkodowawcza</span>
               <Image
                 src="/logo.png"
@@ -50,36 +51,38 @@ export function Header() {
                 className="h-10 w-auto"
                 priority
               />
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:gap-x-10">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-all relative group"
               >
                 {item.name}
                 <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-indigo-600 transition-all duration-300 group-hover:w-full" />
-              </a>
+              </Link>
             ))}
           </div>
 
-          {/* CTA: Bezpłatna Analiza */}
+          {/* CTA: Bezpłatna Analiza z wystającą kropką */}
           <div className="flex flex-1 items-center justify-end gap-x-4">
-            <a
+            <Link
               href="#kontakt"
-              className="relative overflow-hidden rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 active:scale-95 transition-all dark:shadow-none"
+              /* USUNIĘTO overflow-hidden, aby kropka mogła wystawać poza przycisk */
+              className="relative rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 active:scale-95 transition-all dark:shadow-none"
             >
-              <span className="relative z-10 text-white">Bezpłatna analiza</span>
-              {/* Sygnał "Live" */}
-              <span className="absolute top-0 right-0 flex h-3 w-3 -mt-1 -mr-1">
+              <span className="relative z-10">Bezpłatna analiza</span>
+              
+              {/* Sygnał "Live" - Wystający poza obrys */}
+              <span className="absolute -top-1 -right-1 flex h-3 w-3 z-20">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border border-white dark:border-gray-950"></span>
               </span>
-            </a>
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
@@ -96,9 +99,9 @@ export function Header() {
           <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm dark:bg-slate-900">
             <div className="flex items-center justify-between">
-              <a href="#" className="-m-1.5 p-1.5">
+              <Link href="/" className="-m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
                 <Image src="/logo.png" alt="Służebność Przesyłu" width={120} height={34} className="h-8 w-auto" />
-              </a>
+              </Link>
               <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-slate-700 dark:text-slate-200">
                 <XMarkIcon className="h-7 w-7" />
               </button>
@@ -106,14 +109,14 @@ export function Header() {
             <div className="mt-8 flow-root">
               <div className="space-y-2 py-6">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block rounded-lg px-3 py-4 text-base font-bold text-slate-900 hover:bg-slate-50 dark:text-white dark:hover:bg-slate-800 border-b border-slate-100 dark:border-slate-800"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className="py-6 space-y-4">

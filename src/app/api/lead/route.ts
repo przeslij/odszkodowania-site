@@ -1,3 +1,4 @@
+// src/app/api/contact/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { contactFormSchemaRefined, type ContactFormData } from '@/schemas/contact'
 
@@ -5,20 +6,24 @@ import { contactFormSchemaRefined, type ContactFormData } from '@/schemas/contac
 // TYPES
 // ============================================================
 
+interface ApiResponse<T = unknown> {
+  success: boolean
+  message: string
+  code?: string
+  data?: T
+  errors?: Record<string, string[]>
+}
+
 interface RateLimitResult {
   allowed: boolean
   remaining: number
   resetAt: number
 }
 
-interface LeadData extends ContactFormData {
-  leadId: string
-  createdAt: string
-}
-
 // ============================================================
-// RATE LIMITING (In-memory - dla developmentu)
-// W produkcji: Redis, Upstash, lub baza danych
+// RATE LIMITING
+// ⚠️ PRODUKCJA: In-memory Map resetuje się przy cold-start
+// w serverless (Vercel). Zamienić na @upstash/ratelimit + Redis.
 // ============================================================
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
@@ -32,24 +37,13 @@ function checkRateLimit(
   const record = rateLimitMap.get(identifier)
 
   if (!record || now > record.resetAt) {
-    // Nowe okno lub pierwsze żądanie
-    rateLimitMap.set(identifier, {
-      count: 1,
-      resetAt: now + windowMs,
-    })
-    return {
-      allowed: true,
-      remaining: maxRequests - 1,
-      resetAt: now + windowMs,
-    }
+    const resetAt = now + windowMs
+    rateLimitMap.set(identifier, { count: 1, resetAt })
+    return { allowed: true, remaining: maxRequests - 1, resetAt }
   }
 
   if (record.count >= maxRequests) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetAt: record.resetAt,
-    }
+    return { allowed: false, remaining: 0, resetAt: record.resetAt }
   }
 
   record.count++
@@ -66,11 +60,7 @@ function checkRateLimit(
 
 function sanitizeString(value: unknown): string {
   if (typeof value !== 'string') return ''
-  // Usuwamy potencjalnie niebezpieczne znaki
-  return value
-    .replace(/[<>]/g, '')
-    .trim()
-    .slice(0, 500) // Limit długości
+  return value.replace(/[<>]/g, '').trim().slice(0, 500)
 }
 
 function sanitizeFormData(data: Record<string, unknown>): Record<string, unknown> {
@@ -94,8 +84,13 @@ function sanitizeFormData(data: Record<string, unknown>): Record<string, unknown
 }
 
 function normalizePhone(phone: string): string {
-  // Usuwamy wszystko oprócz cyfr i + na początku
   return phone.replace(/[^\d+]/g, '').slice(0, 20)
+}
+
+function maskEmail(email: string): string {
+  const [local, domain] = email.split('@')
+  if (!domain) return '***'
+  return `${local.slice(0, 2)}***@${domain}`
 }
 
 // ============================================================
@@ -106,6 +101,11 @@ async function verifyTurnstile(token: string): Promise<boolean> {
   const secretKey = process.env.TURNSTILE_SECRET_KEY
 
   if (!secretKey) {
+    // Dev bypass — nie blokuj lokalnych testów
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[Turnstile] TURNSTILE_SECRET_KEY not configured - bypass in development')
+      return true
+    }
     console.error('[Turnstile] TURNSTILE_SECRET_KEY not configured')
     return false
   }
@@ -116,10 +116,7 @@ async function verifyTurnstile(token: string): Promise<boolean> {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          secret: secretKey,
-          response: token,
-        }),
+        body: JSON.stringify({ secret: secretKey, response: token }),
       },
     )
 
@@ -128,7 +125,10 @@ async function verifyTurnstile(token: string): Promise<boolean> {
       return false
     }
 
-    const data = await response.json()
+    const data = (await response.json()) as {
+      success: boolean
+      'error-codes'?: string[]
+    }
 
     if (!data.success) {
       console.error('[Turnstile] Verification failed:', data['error-codes'])
@@ -151,7 +151,7 @@ async function saveLead(data: ContactFormData): Promise<string> {
 
   console.log('[API] Lead saved:', {
     leadId,
-    email: data.email,
+    email: maskEmail(data.email),
     infrastructure: data.infrastructure,
     timestamp: new Date().toISOString(),
   })
@@ -167,7 +167,22 @@ async function sendNotification(
   console.log('[API] Notification sent for lead:', {
     leadId,
     name: `${data.firstName} ${data.lastName}`,
-    email: data.email,
+    email: maskEmail(data.email),
+  })
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function jsonResponse<T>(
+  status: number,
+  body: ApiResponse<T>,
+  extraHeaders?: Record<string, string>,
+) {
+  return NextResponse.json(body, {
+    status,
+    headers: extraHeaders,
   })
 }
 
@@ -177,22 +192,21 @@ async function sendNotification(
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. RATE LIMITING - po IP
+    // 1. RATE LIMITING
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
-    const rateLimitResult = checkRateLimit(ip, 5, 15 * 60 * 1000) // 5 requests / 15min
+    const rateLimitResult = checkRateLimit(ip, 5, 15 * 60 * 1000)
 
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
+      return jsonResponse(
+        429,
         {
           success: false,
+          code: 'RATE_LIMIT_EXCEEDED',
           message: 'Za dużo prób. Spróbuj ponownie za 15 minut.',
         },
         {
-          status: 429,
-          headers: {
-            'X-RateLimit-Remaining': '0',
-            'X-RateLimit-Reset': rateLimitResult.resetAt.toString(),
-          },
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.resetAt.toString(),
         },
       )
     }
@@ -202,36 +216,29 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json()
     } catch {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Nieprawidłowy format danych.',
-        },
-        { status: 400 },
-      )
+      return jsonResponse(400, {
+        success: false,
+        message: 'Nieprawidłowy format danych.',
+      })
     }
 
     // 3. VERIFY CAPTCHA
     const captchaToken = body.captchaToken
     if (!captchaToken || typeof captchaToken !== 'string') {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Brak tokenu CAPTCHA.',
-        },
-        { status: 400 },
-      )
+      return jsonResponse(400, {
+        success: false,
+        code: 'CAPTCHA_TOKEN_MISSING',
+        message: 'Brak tokenu CAPTCHA.',
+      })
     }
 
     const captchaValid = await verifyTurnstile(captchaToken)
     if (!captchaValid) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Weryfikacja CAPTCHA nie powiodła się. Odśwież stronę i spróbuj ponownie.',
-        },
-        { status: 400 },
-      )
+      return jsonResponse(400, {
+        success: false,
+        code: 'CAPTCHA_VERIFICATION_FAILED',
+        message: 'Weryfikacja CAPTCHA nie powiodła się. Odśwież stronę i spróbuj ponownie.',
+      })
     }
 
     // 4. SANITIZE INPUT
@@ -244,14 +251,11 @@ export async function POST(request: NextRequest) {
       const fieldErrors = validationResult.error.flatten().fieldErrors
       console.log('[API] Validation failed:', fieldErrors)
 
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Dane formularza są nieprawidłowe',
-          errors: fieldErrors,
-        },
-        { status: 400 },
-      )
+      return jsonResponse(400, {
+        success: false,
+        message: 'Dane formularza są nieprawidłowe.',
+        errors: fieldErrors,
+      })
     }
 
     const validData = validationResult.data
@@ -272,50 +276,42 @@ export async function POST(request: NextRequest) {
       leadId = await saveLead(normalizedData)
     } catch (error) {
       console.error('[API] Database error:', error)
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Błąd zapisu danych. Spróbuj ponownie później.',
-        },
-        { status: 500 },
-      )
+      return jsonResponse(500, {
+        success: false,
+        message: 'Błąd zapisu danych. Spróbuj ponownie później.',
+      })
     }
 
-    // 8. SEND NOTIFICATIONS (async, nie blokujemy response)
-    sendNotification(normalizedData, leadId).catch((error) => {
+    // 8. SEND NOTIFICATIONS (fire-and-forget)
+    void sendNotification(normalizedData, leadId).catch((error) => {
       console.error('[API] Failed to send notification:', error)
     })
 
     // 9. SUCCESS RESPONSE
-    return NextResponse.json(
+    return jsonResponse(
+      200,
       {
         success: true,
-        message: 'Formularz został wysłany pomyślnie',
-        leadId,
+        message: 'Formularz został wysłany pomyślnie.',
+        data: { leadId },
       },
       {
-        status: 200,
-        headers: {
-          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-          'X-RateLimit-Reset': rateLimitResult.resetAt.toString(),
-        },
+        'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+        'X-RateLimit-Reset': rateLimitResult.resetAt.toString(),
       },
     )
   } catch (error) {
     console.error('[API] Unhandled error:', error)
 
-    return NextResponse.json(
-      {
-        success: false,
-        message: 'Wystąpił błąd serwera. Spróbuj ponownie później.',
-      },
-      { status: 500 },
-    )
+    return jsonResponse(500, {
+      success: false,
+      message: 'Wystąpił błąd serwera. Spróbuj ponownie później.',
+    })
   }
 }
 
 // ============================================================
-// OPTIONS - dla CORS preflight
+// OPTIONS - CORS preflight
 // ============================================================
 
 export async function OPTIONS() {

@@ -32,7 +32,6 @@ export function ClaimsCatalog() {
       className="bg-white py-24 sm:py-32 dark:bg-gray-900"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Header — 2-column */}
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none lg:grid lg:grid-cols-2 lg:gap-x-16">
           <div>
             <p className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">
@@ -54,14 +53,13 @@ export function ClaimsCatalog() {
           </div>
         </div>
 
-        {/* Cards */}
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {claims.map((claim) => (
-              <div key={claim.name} className="flex flex-col">
+              <div key={claim.name} className="group flex flex-col">
                 <dt className="text-base/7 font-semibold text-gray-900 dark:text-white">
-                  <div className="mb-6 flex size-10 items-center justify-center rounded-lg bg-indigo-600 dark:bg-indigo-500">
-                    <claim.icon aria-hidden="true" className="size-6 text-white" />
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 shadow-md shadow-indigo-600/20 transition-transform duration-300 group-hover:scale-110 dark:bg-indigo-500 dark:shadow-indigo-500/20">
+                    <claim.icon aria-hidden="true" className="h-6 w-6 text-white" />
                   </div>
                   {claim.name}
                 </dt>
@@ -79,6 +77,10 @@ export function ClaimsCatalog() {
               </div>
             ))}
           </dl>
+
+          <p className="mt-12 text-center text-sm text-slate-500 dark:text-slate-400">
+            W jednej sprawie często łączymy kilka roszczeń jednocześnie - dobieramy strategię do&nbsp;sytuacji Twojej nieruchomości.
+          </p>
         </div>
       </div>
     </section>

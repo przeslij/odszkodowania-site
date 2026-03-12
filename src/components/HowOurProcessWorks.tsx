@@ -451,5 +451,3 @@ export function HowOurProcessWorks() {
     </section>
   )
 }
-
-export default HowOurProcessWorks

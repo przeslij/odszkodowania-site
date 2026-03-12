@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   HomeIcon,
   SunIcon,
@@ -80,10 +80,30 @@ const segments = [
 ]
 
 // ============================================================================
+// SCHEMA.ORG — ItemList (segmenty klientów)
+// ============================================================================
+
+function generateAudienceSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Grupy właścicieli nieruchomości uprawnionych do odszkodowania za służebność przesyłu',
+    itemListElement: segments.map((segment, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: segment.name,
+      description: segment.description,
+    })),
+  }
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
 export function WhoIsItFor() {
+  const audienceSchema = useMemo(() => generateAudienceSchema(), [])
+
   return (
     <section
       id="dla-kogo"
@@ -149,27 +169,52 @@ export function WhoIsItFor() {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 flex flex-col items-center gap-4 sm:mt-20 sm:flex-row sm:justify-center sm:gap-6">
-          <a
-            href="#kontakt"
-            className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500"
-            data-analytics="cta-primary"
-            data-analytics-location="who-is-it-for"
-          >
-            Sprawdź swoją sprawę →
-          </a>
-          <a
-            href="#jak-dzialamy"
-            className="text-sm/6 font-semibold text-gray-900 transition-colors duration-200 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
-            data-analytics="cta-secondary"
-            data-analytics-location="who-is-it-for"
-          >
-            Jak wygląda proces <span aria-hidden="true">→</span>
-          </a>
+        <div className="mt-16 flex flex-col items-center gap-6 sm:mt-20 sm:flex-row sm:justify-center sm:gap-8">
+          <div className="flex flex-col items-center gap-2">
+            <a
+              href="#kontakt"
+              className="rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500"
+              data-analytics="cta-primary"
+              data-analytics-location="who-is-it-for"
+            >
+              Sprawdź swoją sprawę <span aria-hidden="true">&rarr;</span>
+            </a>
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 20 20" 
+                fill="currentColor" 
+                className="w-4 h-4 text-emerald-500"
+                aria-hidden="true"
+              >
+                <path 
+                  fillRule="evenodd" 
+                  d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" 
+                  clipRule="evenodd" 
+                />
+              </svg>
+              <span>Bezpłatna weryfikacja w 24h</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center sm:pb-6">
+            <a
+              href="#jak-dzialamy"
+              className="text-sm/6 font-semibold text-gray-900 transition-colors duration-200 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+              data-analytics="cta-secondary"
+              data-analytics-location="who-is-it-for"
+            >
+              Jak wygląda proces <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
         </div>
       </Container>
+
+      {/* Schema.org ItemList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(audienceSchema) }}
+      />
     </section>
   )
 }
-
-export default WhoIsItFor

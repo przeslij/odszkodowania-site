@@ -6,14 +6,71 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply antialiased;
+  }
+
+  /* Brand-colored text selection */
+  ::selection {
+    @apply bg-indigo-500/20 text-indigo-900;
+  }
+
+  /* Focus-visible fallback — components with inline focus-visible override this */
+  :focus-visible {
+    outline: 2px solid theme('colors.indigo.600');
+    outline-offset: 2px;
+  }
+
+  /* Accessibility: respect user motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 }
 
 @layer utilities {
   .animate-in {
-    animation: fadeIn 0.2s ease-out, slideInFromTop1 0.2s ease-out;
+    animation: fadeIn 0.2s ease-out, slideInFromTop 0.2s ease-out;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* Keyframes — required by .animate-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-4px);
+  }
+  to {
+    transform: translateY(0);
   }
 }

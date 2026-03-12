@@ -1,76 +1,84 @@
 // src/schemas/contact.ts
 import { z } from 'zod'
 
-// Eksportujemy typ infrastruktury dla użycia w komponentach
 export const INFRA_TYPES = ['slup', 'gaz', 'ropa', 'inne'] as const
 export type InfraType = (typeof INFRA_TYPES)[number]
 
-// Regex dla liter (polskie znaki + spacje + myślniki + apostrof dla nazwisk typu O'Connor)
+// Regex: polskie znaki + spacje + myślniki + apostrof (O'Connor, Nowak-Kowalska)
 const NAME_REGEX = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s'-]+$/
+
+// Centralized required messages — ułatwia i18n i spójność
+const REQUIRED = {
+  firstName: 'Podaj imię',
+  lastName: 'Podaj nazwisko',
+  phone: 'Podaj numer telefonu',
+  email: 'Podaj adres e-mail',
+  city: 'Podaj miejscowość',
+} as const
 
 export const contactFormSchemaRefined = z
   .object({
     firstName: z
       .string({
-        required_error: 'Podaj imię',
-        invalid_type_error: 'Podaj imię',
+        required_error: REQUIRED.firstName,
+        invalid_type_error: REQUIRED.firstName,
       })
+      .trim()
       .min(2, 'Imię musi mieć co najmniej 2 znaki')
       .max(50, 'Imię jest zbyt długie')
-      .regex(
-        NAME_REGEX,
-        'Imię może zawierać tylko litery, spacje i myślniki'
-      ),
+      .regex(NAME_REGEX, 'Imię może zawierać tylko litery, spacje i myślniki'),
 
     lastName: z
       .string({
-        required_error: 'Podaj nazwisko',
-        invalid_type_error: 'Podaj nazwisko',
+        required_error: REQUIRED.lastName,
+        invalid_type_error: REQUIRED.lastName,
       })
+      .trim()
       .min(2, 'Nazwisko musi mieć co najmniej 2 znaki')
       .max(50, 'Nazwisko jest zbyt długie')
-      .regex(
-        NAME_REGEX,
-        'Nazwisko może zawierać tylko litery, spacje i myślniki'
-      ),
+      .regex(NAME_REGEX, 'Nazwisko może zawierać tylko litery, spacje i myślniki'),
 
     phone: z
       .string({
-        required_error: 'Podaj numer telefonu',
-        invalid_type_error: 'Podaj numer telefonu',
+        required_error: REQUIRED.phone,
+        invalid_type_error: REQUIRED.phone,
       })
+      .trim()
       .min(9, 'Numer telefonu jest zbyt krótki')
       .max(15, 'Numer telefonu jest zbyt długi')
       .regex(/^[\d\s\-\+\(\)]+$/, 'Numer zawiera niedozwolone znaki'),
 
     email: z
       .string({
-        required_error: 'Podaj adres e-mail',
-        invalid_type_error: 'Podaj adres e-mail',
+        required_error: REQUIRED.email,
+        invalid_type_error: REQUIRED.email,
       })
+      .trim()
       .email('Podaj poprawny adres e-mail')
       .max(100, 'Adres e-mail jest zbyt długi'),
 
-    // Kod pocztowy: albo pełny format 00-000, albo pusty string (dla resetu/początkowego stanu)
-    postalCode: z
-      .union([
-        z.string().regex(/^\d{2}-\d{3}$/, 'Wprowadź kod pocztowy w formacie 00-000'),
+    postalCode: z.union(
+      [
+        z
+          .string()
+          .trim()
+          .regex(/^\d{2}-\d{3}$/, 'Wprowadź kod pocztowy w formacie 00-000'),
         z.literal(''),
-      ], {
+      ],
+      {
         errorMap: () => ({ message: 'Wprowadź kod pocztowy w formacie 00-000' }),
-      }),
+      },
+    ),
 
     city: z
       .string({
-        required_error: 'Podaj miejscowość',
-        invalid_type_error: 'Podaj miejscowość',
+        required_error: REQUIRED.city,
+        invalid_type_error: REQUIRED.city,
       })
+      .trim()
       .min(2, 'Podaj miejscowość')
       .max(100, 'Nazwa miejscowości jest zbyt długa')
-      .regex(
-        NAME_REGEX,
-        'Nazwa miejscowości może zawierać tylko litery'
-      ),
+      .regex(NAME_REGEX, 'Nazwa miejscowości może zawierać tylko litery'),
 
     infrastructure: z
       .array(z.enum(INFRA_TYPES), {
@@ -79,18 +87,17 @@ export const contactFormSchemaRefined = z
       })
       .min(1, 'Wybierz co najmniej jeden rodzaj infrastruktury'),
 
-    // Pola warunkowe - wymagane tylko gdy wybrano odpowiednią infrastrukturę
     slupParams: z
-      .string({
-        invalid_type_error: 'Wybierz parametry techniczne słupa',
-      })
+      .string({ invalid_type_error: 'Wybierz parametry techniczne słupa' })
+      .trim()
+      .max(200, 'Wartość jest zbyt długa')
       .optional()
       .nullable(),
 
     gazParams: z
-      .string({
-        invalid_type_error: 'Wybierz parametry techniczne gazociągu',
-      })
+      .string({ invalid_type_error: 'Wybierz parametry techniczne gazociągu' })
+      .trim()
+      .max(200, 'Wartość jest zbyt długa')
       .optional()
       .nullable(),
 
@@ -108,8 +115,6 @@ export const contactFormSchemaRefined = z
       .optional()
       .nullable(),
 
-    // POPRAWIONE: Używamy boolean() z refine zamiast literal(true)
-    // Pozwala to na false w defaultValues, ale wymaga true przy walidacji
     marketingConsent: z
       .boolean({
         required_error: 'Zaznacz zgodę na kontakt marketingowy',
@@ -124,12 +129,12 @@ export const contactFormSchemaRefined = z
         required_error: 'Potwierdź, że nie jesteś robotem',
         invalid_type_error: 'Potwierdź, że nie jesteś robotem',
       })
+      .trim()
       .min(1, 'Potwierdź, że nie jesteś robotem'),
   })
   .superRefine((data, ctx) => {
     const infra = data.infrastructure ?? []
 
-    // Parametry słupa wymagane tylko, jeśli wybrano słup
     if (infra.includes('slup') && !data.slupParams) {
       ctx.addIssue({
         path: ['slupParams'],
@@ -138,7 +143,6 @@ export const contactFormSchemaRefined = z
       })
     }
 
-    // Parametry gazociągu wymagane tylko, jeśli wybrano gaz
     if (infra.includes('gaz') && !data.gazParams) {
       ctx.addIssue({
         path: ['gazParams'],
@@ -147,7 +151,6 @@ export const contactFormSchemaRefined = z
       })
     }
 
-    // Status i KW wymagane, gdy wybrano jakąkolwiek infrastrukturę
     if (infra.length > 0 && !data.status) {
       ctx.addIssue({
         path: ['status'],
@@ -164,7 +167,6 @@ export const contactFormSchemaRefined = z
       })
     }
 
-    // Kod pocztowy wymagany przy submit (walidacja warunkowa)
     if (data.postalCode === '') {
       ctx.addIssue({
         path: ['postalCode'],

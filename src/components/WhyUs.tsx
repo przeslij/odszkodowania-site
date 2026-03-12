@@ -209,5 +209,3 @@ export function WhyUs() {
     </section>
   )
 }
-
-export default WhyUs

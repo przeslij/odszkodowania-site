@@ -134,7 +134,7 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
         <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white shadow-md">
-            <Icon className="h-4 w-4" />
+            <Icon className="h-4 w-4" aria-hidden="true" />
           </div>
           <span className="font-medium text-white text-sm tracking-wide shadow-sm">
             {device.title}
@@ -150,12 +150,12 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
           {device.description}
         </p>
         <ul className="space-y-2 mb-6 border-t border-gray-100 dark:border-gray-700/50 pt-4">
-          {device.details.map((detail, index) => (
+          {device.details.map((detail) => (
             <li
-              key={index}
+              key={detail}
               className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400 font-medium"
             >
-              <svg className="h-5 w-5 text-indigo-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5 text-indigo-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
               {detail}
@@ -167,7 +167,7 @@ function DeviceCardComponent({ device }: { device: DeviceCard }) {
           className="mt-auto inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
         >
           Sprawdź potencjał roszczeń
-          <ArrowRightIcon className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRightIcon className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
         </Link>
       </div>
     </article>
@@ -179,7 +179,7 @@ export function TransmissionDevices() {
     <section
       id="urzadzenia"
       aria-labelledby="devices-heading"
-      className="py-24 sm:py-32 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
+      className="py-24 sm:py-32 bg-slate-50 dark:bg-gray-900/50 relative overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -191,14 +191,14 @@ export function TransmissionDevices() {
             </p>
             <h2
               id="devices-heading"
-              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
+              className="mt-2 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
             >
               Urządzenia przesyłowe na Twojej działce
             </h2>
           </div>
           <div className="mt-6 lg:mt-0 lg:flex lg:items-end">
             <p className="max-w-xl text-lg leading-8 text-gray-600 dark:text-gray-300">
-              Każde urządzenie stanowiące <strong>trwałe ograniczenie korzystania z nieruchomości</strong> uprawnia Cię do wynagrodzenia. Wybierz rodzaj infrastruktury, z którym się mierzysz, aby sprawdzić swoje prawa.
+              Każde urządzenie stanowiące <strong className="text-gray-900 dark:text-white">trwałe ograniczenie korzystania z nieruchomości</strong> uprawnia Cię do wynagrodzenia. Wybierz rodzaj infrastruktury, z którym się mierzysz, aby sprawdzić swoje prawa.
             </p>
           </div>
         </div>
